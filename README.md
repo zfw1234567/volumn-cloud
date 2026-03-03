@@ -11,3 +11,7 @@
 性能优化：利用weather-map减少对3D纹理的采样次数，对空旷天空更友好，1×1分辨率下耗时从12ms降至8ms。实现降分辨率和上采样，1/2×1/2分辨率下单帧耗时降至3ms。
 
 其他优化：基于蓝噪声的dither打破云体分层和阴影分界，使用高斯模糊和TAA实现降噪。
+
+效果展示：
+<img width="1075" height="718" alt="image" src="https://github.com/user-attachments/assets/8fa5bf60-1597-45c6-9fd7-9bf23d7726c3" />
+<img width="1080" height="717" alt="屏幕截图 2026-03-03 180212" src="https://github.com/user-attachments/assets/502f3c2f-2467-4a32-95e7-c192b8f839b8" />
