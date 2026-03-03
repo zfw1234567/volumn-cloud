@@ -47,14 +47,7 @@ float absorption = ubo.parameter[1];
 float cloudLumen = ubo.parameter[2];
 float time = ubo.parameter[3];
 
-// 新增参数
-const float DENSITY_THRESHOLD = 0.3;
-const float CLOUD_EDGE_SOFTNESS = 0.1;
-const float DETAIL_STRENGTH = 0.5;
-const float HEIGHT_GRADIENT_STRENGTH = 1.0;
-const float CLOUD_BOTTOM_FADE = 0.2;
-const float CLOUD_TOP_FADE = 0.3;
-
+// 控制参数
 const float POWDER_STRENGTH = 0.5;
 const float AMBIENT_STRENGTH = 0.2;
 const float FORWARD_SCATTERING = 0.2;
@@ -136,7 +129,7 @@ float dualLobPhase(float g0, float g1, float w, float cosTheta)
     return mix(hgPhase(g0, cosTheta), hgPhase(g1, cosTheta), w);
 }
 
-// 新的密度采样函数，类似第二个着色器
+
 float sampleCloudDensity(vec3 currentPos)
 {
     vec3 boxMin = getBoxMin();
@@ -158,7 +151,6 @@ float sampleCloudDensity(vec3 currentPos)
 
     heightGradient = getDensityForCloud(uvw.y,weather.g);
     heightGradient=clamp(heightGradient,0.0,1.0) * weather.g;
-    //heightGradient =  1.0;
 
     if(heightGradient==0.0)
     {
@@ -209,7 +201,7 @@ bool rayBoxIntersect(vec3 rayOrigin, vec3 rayDir, vec3 boxMin, vec3 boxMax, out 
     return tEnter <= tExit && tExit > 0.0;
 }
 
-// 修改光照步进函数，类似第二个着色器
+
 float lightMarch(vec3 startPos, vec3 lightDir, int steps, float dither)
 {
     float stepSize = 5.0;
@@ -219,7 +211,7 @@ float lightMarch(vec3 startPos, vec3 lightDir, int steps, float dither)
     
     for (int i = 0; i < steps; i++)
     {
-        // 使用dither打破分界
+
         vec3 samplePos = startPos + (lightDir * stepSize * (float(i) + dither ) + noiseKernel[i%steps] * 1.0) / float(steps);
         
         // 转换到UVW空间
@@ -232,12 +224,8 @@ float lightMarch(vec3 startPos, vec3 lightDir, int steps, float dither)
         float density = sampleCloudDensity(samplePos);
         opticalDepth += density * stepSize * (float(i) + dither) / float(steps);
         
-        // 提前退出
-        //if (opticalDepth > 5.0)
-        //    break;
     }
     
-    // Beer-Lambert + Powder效果
     float transmittance = exp(-opticalDepth * absorption);
     float powder = 1.0 - exp(-opticalDepth * 2.0 * POWDER_STRENGTH);
     
@@ -267,7 +255,7 @@ void main() {
     
     // 计算步进参数
     float totalDistance = tExit - tEnter;
-    const int steps = 64; // 增加步数以获得更好的质量
+    const int steps = 64; 
     float stepSize = totalDistance / float(steps);
     float bigstepsize = stepSize;
     float smallstepsize = float(min(ubo.size.x, min(ubo.size.y, ubo.size.z))) / float(steps);
@@ -299,12 +287,9 @@ void main() {
         
         // 采样密度
         float density = sampleCloudDensity(currentPos) ;
-
-        
         
         if (density > 0.01) {
 
-            //深度
             sampleincloudCount+=1.0;
             nearestCloudpos+=(1.0 - step(1.5, sampleincloudCount)) * currentPos;
 
@@ -319,11 +304,10 @@ void main() {
                 0.5
             );
             
-            // 添加基础多重散射
+            // 基础多重散射
             phase = max(0.15,phase);
-            //phase = 1.0;
             
-            // 环境光（在薄处和边缘更强）
+            // 环境光
             float ambientStrength = clamp((1.0 - lightEnergy) * transmittance, 0.0, 1.0);
             
             //vec3 ambient = AMBIENT_COLOR.rgb * ambientStrength * (1.0 + AMBIENT_STRENGTH) * transmittance ;

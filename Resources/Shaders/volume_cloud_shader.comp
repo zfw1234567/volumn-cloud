@@ -1,4 +1,4 @@
-// noise_generator.comp
+
 #version 460
 #extension GL_EXT_shader_explicit_arithmetic_types : enable
 
@@ -23,7 +23,6 @@ float remap(float x, float a, float b, float c, float d)
     return (((x - a) / (b - a)) * (d - c)) + c;
 }
 
-// Gradient noise by iq (modified to be tileable)
 float gradientNoise(vec3 x, float freq)
 {
     // grid
@@ -119,14 +118,11 @@ float worleyFbm(vec3 p, float freq)
 void main() {
     ivec3 texCoord = ivec3(gl_GlobalInvocationID.xyz);
     vec3 textureSize = vec3(imageSize(outputTexture));
-    
-    // 计算UV坐标
+
     vec3 uv = (vec3(texCoord) + 0.5) / textureSize;
-    
-    // 计算深度切片（原代码使用鼠标控制，这里使用z坐标）
+
     float slice = float(texCoord.z) / textureSize.z;
     
-    // 生成噪声
     float freq = 4.0;
     float slices = textureSize.z;
     
@@ -139,7 +135,5 @@ void main() {
     col.a += worleyFbm(vec3(uv.xy, slice), freq * 4.0);
     col.r += remap(pfbm, 0.0, 1.0, col.g, 1.0);
 
-
-    // 写入3D纹理
     imageStore(outputTexture, texCoord, col);
 }

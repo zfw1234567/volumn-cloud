@@ -79,7 +79,6 @@ static void destroyDebugUtilsMessengerEXT(VkInstance instance, VkDebugUtilsMesse
 }
 
 
-/** 主函数*/
 int main()
 {
 
@@ -192,7 +191,7 @@ int main()
     app.volumecloud=&volumecloud;
     std::cout<<"end volumecloudcreate"<<std::endl;
 
-    app.downscaleFactor = 1; // 1/2分辨率
+    app.downscaleFactor = 1; // 分辨率
     const VkExtent2D downscaledExtent = {
         app.swapChainExtent.width / app.downscaleFactor,
         app.swapChainExtent.height / app.downscaleFactor};
