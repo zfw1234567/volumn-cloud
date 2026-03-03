@@ -15,3 +15,6 @@
 效果展示：
 <img width="1075" height="718" alt="image" src="https://github.com/user-attachments/assets/8fa5bf60-1597-45c6-9fd7-9bf23d7726c3" />
 <img width="1080" height="717" alt="屏幕截图 2026-03-03 180212" src="https://github.com/user-attachments/assets/502f3c2f-2467-4a32-95e7-c192b8f839b8" />
+1/2×1/2分辨率：
+<img width="1069" height="705" alt="image" src="https://github.com/user-attachments/assets/2673ca06-276d-469f-8d1c-57671e443917" />
+
